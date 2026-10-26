@@ -22,7 +22,9 @@ BROWSERS = [
 
 
 def run_suite(browser, suite, port, timeout):
-    out = RESULTS / f"{suite}.txt"
+    # "ui" -> /__tests__/ui.html; "__tools__/render-hero" -> /__tools__/render-hero.html
+    path = f"/{suite}.html" if suite.startswith("__") else f"/__tests__/{suite}.html"
+    out = RESULTS / f"{suite.rsplit('/', 1)[-1]}.txt"
     out.unlink(missing_ok=True)
     profile = Path(tempfile.mkdtemp(prefix="kostudio-headless-"))
     proc = subprocess.Popen([
@@ -32,7 +34,7 @@ def run_suite(browser, suite, port, timeout):
         # Keep the page "visible" even when the desktop is locked or covered (remote sessions).
         "--disable-features=CalculateNativeWinOcclusion", "--disable-backgrounding-occluded-windows",
         "--disable-renderer-backgrounding", "--disable-background-timer-throttling",
-        f"http://127.0.0.1:{port}/__tests__/{suite}.html?report",
+        f"http://127.0.0.1:{port}{path}?report",
     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
         end = time.time() + timeout

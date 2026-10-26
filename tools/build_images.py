@@ -182,7 +182,7 @@ def build_hero():
         src = render / f"hero-{w}.png"
         im = Image.open(src).convert("RGB") if src.exists() else \
             Image.open(BRAND / "KO-studio_logo_3840x2160.png").convert("RGB").resize((w, w * 9 // 16), Image.LANCZOS)
-        save_webp(im, f"hero-{w}.webp", cap)
+        save_webp(im, f"hero-{w}.webp", cap, q=94)
 
 
 if __name__ == "__main__":

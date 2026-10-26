@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>render hero</title>
+<link rel="stylesheet" href="/assets/css/fonts.css">
+<pre id="results"></pre>
+<script type="module">
+// Renders the intro's T_LOGO frame with the site's own intro.js and saves it through the dev server
+// (.cache/render/hero-<width>.png). Then run: python tools/build_images.py --only hero
+import { renderFrame } from '/assets/js/intro/intro.js';
+
+const out = document.getElementById('results');
+try {
+  for (const [w, h] of [[1920, 1080], [2880, 1620]]) {
+    const canvas = await renderFrame({ width: w, height: h });
+    const blob = await new Promise((r) => canvas.toBlob(r, 'image/png'));
+    const res = await fetch(`/__save__/hero-${w}.png`, { method: 'POST', body: blob });
+    if (!res.ok) throw new Error(`save hero-${w}.png: ${res.status}`);
+    out.textContent += `PASS hero-${w}.png\n`;
+  }
+  out.textContent += 'RESULT: PASS 2/2\n';
+  document.title = 'SAVED';
+} catch (e) {
+  out.textContent += `FAIL ${e.message}\nRESULT: FAIL 1/1\n`;
+  document.title = 'FAIL';
+}
+if (new URLSearchParams(location.search).has('report')) {
+  await fetch('/__results__/render-hero', { method: 'POST', body: out.textContent });
+}
+</script>
