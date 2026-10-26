@@ -158,7 +158,6 @@
 - 게임 수만큼 가로 타일을 놓는다. 각 타일 구성:
   - 대표 이미지
   - 게임 이름
-  - 제작 표기 한 줄 (4.6)
   - 개발 단계 한 단어 (5장의 "타일 단계")
 - 누르면 해당 게임 섹션으로 스크롤한다.
 - 미공개 게임 타일(11장 5번에서 넣기로 할 때만): 이미지와 이름 없이 자물쇠 아이콘과 4.9의 "곧 공개" 문구만 보여주고, 누를 수 없다. 넣지 않기로 하면 배포되는 HTML에 주석으로도 흔적을 남기지 않는다.
@@ -169,27 +168,27 @@
 
 ```
 [대표 이미지 (16:9)]           [제목 (게임 로고 또는 게임 글꼴)]
-                              [제작 표기 한 줄]
+                              [크레딧 한 줄 (4.6)]
                               [한 줄 소개]
                               [태그: 장르 · 플랫폼 · 개발 단계]
                               [설명 2~3문장]
                               [수상 표시 (있을 때)]
 [스크린샷 3~4장, 가로 줄]
-[크레딧과 저작권 한 줄]        [바깥 링크 (있을 때)]
+                              [바깥 링크 (있을 때)]
 ```
 
 - **대표 이미지.** 16:9 이미지 한 장. 화면에 들어올 때 불러온다(`loading="lazy"`).
 - **스크린샷.** 누르면 같은 페이지 안에서 크게 본다(`<dialog>`, Esc와 바깥 클릭으로 닫힘, 닫히면 누른 썸네일로 포커스 복귀). 새 창을 띄우지 않는다.
-- **크레딧.** 팀 이름(삼유스튜디오 / 3U Studio)만 모든 게임에 같은 문구로 쓰고, 팀원별 역할은 게임마다 따로 적는다. 역할이 확인되지 않은 게임은 팀 이름만 적는다. 끝에 `© 삼유스튜디오`를 붙인다.
+- **크레딧.** 4.6을 따른다. 역할은 게임마다 따로 적고, 확인되지 않은 역할은 적지 않는다.
 
 ### 4.6 제작 표기
 
-두 게임 모두 삼유스튜디오(고유준, 이유진, 권유담 3인 팀)의 작품이다. KO Studio와 팀의 관계는 팀과 정하는 중이므로, 사이트는 게임을 KO Studio 단독 작품처럼 보이게 하지 않는다.
+두 게임 모두 고유준, 이유진, 권유담 세 사람이 함께 만들고 있다. 사이트에는 팀 이름을 쓰지 않고(사용자 결정, 2026-10-27), 대신 팀원 크레딧을 보이게 두어 게임이 한 사람의 작품처럼 보이지 않게 한다.
 
-- 각 게임 제목 아래와 타일에 제작 표기를 보이게 둔다.
-  - OFF THE RECORD: "삼유스튜디오 작품 · 고유준 기획·사운드 참여" / "A 3U Studio game · Ko Yujun: design & sound"
-  - FeelSoGut!: "삼유스튜디오 작품" / "A 3U Studio game" (역할은 11장 3번 답이 오면 추가)
-- 관계가 정해지면 이 표기와 5.3 문단만 바꾼다.
+- 각 게임 제목 아래에 크레딧 한 줄을 둔다. 타일에는 넣지 않는다.
+  - OFF THE RECORD: "고유준 기획·사운드 · 이유진 개발 · 권유담 아트" / "Ko Yujun (design, sound) · 이유진 (development) · 권유담 (art)"
+  - FeelSoGut!: "고유준 · 이유진 · 권유담" (역할은 11장 3번 답이 오면 추가)
+- 영어 페이지의 팀원 이름은 영문 표기를 받을 때까지 한글로 둔다 (11장 4번).
 
 ### 4.7 스튜디오
 
@@ -199,12 +198,14 @@
 
 - 큰 글씨로 `ko@kostudio.org` (`mailto:` 링크).
   - 주소는 DOM에 진짜 텍스트로 둔다(`@` 포함). 핏방울은 `@` 뒤에 깔리는 장식(가상 요소, `aria-hidden`)이다. 복사·붙여넣기와 스크린 리더가 정확한 주소를 얻어야 하기 때문이다.
-- 그 아래 한 줄: "퍼블리싱, 협업, 채용·외주 제안 모두 메일로 받아요." / "For publishing, collaboration, or job and contract offers, email us."
+- 그 아래 한 줄: "퍼블리싱, 협업, 채용·외주 제안 모두 메일로 받습니다." / "For publishing, collaboration, or job and contract offers, email us."
 - 전화번호와 개인 SNS는 넣지 않는다.
 
 ### 4.9 푸터와 문구 표
 
-푸터: `© 2026 KO Studio · 게임 제목과 이미지 © 삼유스튜디오` · 인트로 다시 보기 · `KO/EN`. "인트로 다시 보기"는 인트로가 재생될 수 없는 환경(움직임 줄이기, WebGL 없음)에서는 숨긴다.
+푸터: `© 2026 KO Studio · 게임 제목과 이미지의 저작권은 각 게임 제작진에게 있습니다` (영어: `Game titles and art © their respective creators`) · 인트로 다시 보기 · `KO/EN`.
+
+**문체.** 한국어 문장은 모두 합쇼체(`-습니다`)로 쓴다 (사용자 결정, 2026-10-27). 한 줄 소개 같은 짧은 문구는 명사형이나 표어 형태로 둔다. "인트로 다시 보기"는 인트로가 재생될 수 없는 환경(움직임 줄이기, WebGL 없음)에서는 숨긴다.
 
 | 위치 | 한국어 페이지 | 영어 페이지 |
 |---|---|---|
@@ -212,7 +213,7 @@
 | 소리 버튼 (오른쪽 아래) | 소리 켜기 / 소리 끄기 | Sound on / Sound off |
 | 푸터 다시 보기 링크 | 인트로 다시 보기 | Replay intro |
 | 잠긴 타일 | 곧 공개 | Coming soon |
-| 404 제목 | 페이지를 찾을 수 없어요 | Page not found |
+| 404 제목 | 페이지를 찾을 수 없습니다 | Page not found |
 | 404 링크 | 홈으로 가기 | Back to home |
 
 - `404.html`은 한 파일에 두 언어를 함께 적는다. 어느 경로에서든 열리므로 자원 경로는 모두 `/assets/...` 절대 경로로 쓴다.
@@ -228,11 +229,11 @@
   - KO: 박자로 귀신을 달래 보내는 사이버 무속 리듬 게임
   - EN: A one-button cyber-shaman rhythm game.
 - **설명.**
-  - KO: 할부를 못 내 고철로 압류될 처지의 기계 무당 잭두가, 화면 밖 '신령님'인 당신의 박자를 빌려 주식에 물려 죽은 광대 물귀신을 굿판으로 신나게 놀아 드리고 떠나보내요. 캐릭터가 먼저 리듬을 보여주면 버튼 하나로 똑같이 따라 치는 미니게임들이 이어져요. 네온 사이버 도시와 한국 무속, 주식 은어가 뒤섞인 블랙코미디예요.
+  - KO: 할부를 못 내 고철로 압류될 처지의 기계 무당 잭두가, 화면 밖 '신령님'인 당신의 박자를 빌려 주식에 물려 죽은 광대 물귀신을 굿판으로 신나게 놀아 드리고 떠나보냅니다. 캐릭터가 먼저 리듬을 보여주면 버튼 하나로 똑같이 따라 치는 미니게임들이 이어집니다. 네온 사이버 도시와 한국 무속, 주식 은어가 뒤섞인 블랙코미디입니다.
   - EN: Jackdoo, a cyborg shaman about to be repossessed for a missed installment, borrows your beat — you're the offscreen spirit — to throw a ritual party for a clown-faced water ghost who drowned holding a crashed stock, and send him on his way. Characters play a rhythm; you answer with a single button across a run of minigames. Neon cyber-city meets Korean shamanism and stock-forum slang in a black comedy.
 - **태그.** 리듬 · 원버튼 · 스토리 · PC / Rhythm · One-button · Narrative · PC
 - **개발 단계.** 섹션: "알파 · 개발 중" / "Alpha · In development". 타일 단계: "알파" / "Alpha".
-- **제작 표기.** 4.6.
+- **크레딧.** 4.6.
 - **미디어.** 원본은 팀의 공개 저장소(`rhythm-prototype`)의 `Assets/`.
   - 대표 이미지: 스테이지 1-5 인트로 장면. `Assets/1-5/`의 배경·바다·광대·잭두 레이어를 합성한다 (제목 레이어 제외).
   - 스크린샷: 1-1 파도타기, 1-2 넘기기, 1-4 물타기 인트로 장면 (각각 레이어 합성).
@@ -245,12 +246,12 @@
   - KO: 나가서 건지고, 돌아와서 판다
   - EN: Salvage it out there. Sell it back home.
 - **설명.**
-  - KO: 하늘이 죽고 백 년, 사람은 궤도 정거장에 살고 궤도를 도는 위성·로켓 잔해가 곧 돈이에요. 회사에 빚진 회수원이 되어 잔해에 붙어 화물칸을 열고 화물을 건진 뒤, 정거장에 돌아와 팔아 배를 키워 더 먼 궤도로 나가요. 다만 칸을 열수록 시끄러워지고, 소음을 쫓는 스위퍼가 와요.
+  - KO: 하늘이 죽고 백 년, 사람은 궤도 정거장에 살고 궤도를 도는 위성·로켓 잔해가 곧 돈입니다. 회사에 빚진 회수원이 되어 잔해에 붙어 화물칸을 열고 화물을 건진 뒤, 정거장에 돌아와 팔아 배를 키워 더 먼 궤도로 나갑니다. 다만 칸을 열수록 시끄러워지고, 소음을 쫓는 스위퍼가 찾아옵니다.
   - EN: A century after the sky died, people live on orbital stations, and the wrecks circling Earth are currency. As an indebted salvager, latch onto wrecks, crack open cargo bays, then fly home to sell your haul and upgrade your ship for higher orbits. But every bay you open makes noise — and the Sweepers hunt noise.
 - **태그.** 익스트랙션 어드벤처 · 탑뷰 · 싱글 플레이 · PC / Extraction adventure · Top-down · Single-player · PC
 - **개발 단계.** 섹션: "개발 중 · 15분 데모 제작 중" / "In development · 15-minute demo in progress". 타일 단계: "개발 중" / "In development".
 - **수상.** "2026 미래 게임잼 최우수상" / "Top Excellence Award (최우수상), 2026 Future Game Jam". 이 행사에서 최우수상은 대상 아래 등급이므로 영어로 "Grand prize"라고 쓰지 않는다. 영문 공식 명칭은 확인 전이다 (11장 7번).
-- **제작 표기.** 4.6. 섹션 크레딧: "삼유스튜디오 — 고유준 기획·사운드 · 이유진 개발 · 권유담 아트" (팀 페이지 표기 그대로).
+- **크레딧.** 4.6 (역할은 팀 페이지 표기 그대로).
 - **바깥 링크.** 팀 소개 페이지 `/off-the-record/` (도메인 연결 후 같은 사이트의 주소가 된다).
 - **미디어.** 원본은 팀 페이지 저장소 `Gomurloc/off-the-record`의 `이미지/웹/`.
   - 대표 이미지: `타이틀_글자없음.jpg` (1920×1080, 글자 없는 타이틀 아트)
@@ -261,11 +262,12 @@
 ### 5.3 스튜디오 소개 (초안)
 
 - KO:
-  > KO Studio는 게임 기획자이자 사운드 디자이너 고유준의 스튜디오예요. 이름도 고유준에서 왔어요. 성 '고(Ko)', 그리고 인트로의 종이 인형은 '유준'의 초성 ㅇ·ㅈ이에요. 이 인형이 한 방에 쓰러지면 K·O가 되죠. 그렇게 예상을 한 번에 뒤집는 게임을 만들고 싶어요.
-  > 지금은 순천향대학교 메타버스&게임학과 동기들과 꾸린 팀 삼유스튜디오에서 두 게임을 함께 만들고 있어요.
+  > KO Studio는 게임 기획자이자 사운드 디자이너 고유준의 스튜디오입니다. 이름도 고유준에서 왔습니다. 성 '고(Ko)', 그리고 인트로의 종이 인형은 '유준'의 초성 ㅇ·ㅈ입니다. 이 인형이 한 방에 쓰러지면 K·O가 됩니다. 그렇게 예상을 한 번에 뒤집는 게임을 만듭니다.
+  > 지금은 동료 개발자, 아티스트와 함께 두 게임을 만들고 있습니다.
 - EN:
-  > KO Studio is the game studio of designer and sound designer Ko Yujun, and the name is Ko Yujun's own. Ko is the family name, and the paper figure in the intro is ㅇ and ㅈ, the Korean initials of Yujun. Knock it down and it becomes K·O. That's the kind of game KO Studio wants to make: one that flips your expectations in a single blow.
-  > Right now, Ko Yujun is building two games with 3U Studio, a team of classmates from the Metaverse & Game program at Soonchunhyang University.
+  > KO Studio is the game studio of designer and sound designer Ko Yujun, and the name is Ko Yujun's own. Ko is the family name, and the paper figure in the intro is ㅇ and ㅈ, the Korean initials of Yujun. Knock it down and it becomes K·O. That's the kind of game KO Studio makes: one that flips your expectations in a single blow.
+  > Right now, Ko Yujun is building two games together with a fellow developer and an artist.
+- 팀 이름(삼유스튜디오)은 사이트에 쓰지 않는다 (사용자 결정, 2026-10-27). 팀원은 게임별 크레딧(4.6)으로 밝힌다.
 - 이름 풀이(성 Ko + 초성 ㅇ·ㅈ + K.O.)는 사용자가 확인한 내용이다 (2026-10-27). 스플래시 코드 주석에도 인형을 "훈민정음 해례본풍 ㅇ·ㅈ"로 만들었다고 적혀 있다.
 
 ## 6. 기술 구조
@@ -441,12 +443,12 @@ DNS 값과 화면 단계는 공식 문서(docs.github.com, support.squarespace.c
 |---|---|---|
 | 1 | 두 게임의 플레이 영상 | 없이 진행 (사용자 결정). 생기면 13장 |
 | 2 | 이유진 님, 권유담 님의 게재 동의 | **해결됨 (2026-10-27).** 사용자가 동의를 확인함. 영문 이름 표기는 4번에 남음 |
-| 3 | FeelSoGut!의 팀원별 역할 표기 | "삼유스튜디오 작품"만 표기 |
+| 3 | FeelSoGut!의 팀원별 역할 표기 | 역할 없이 세 사람 이름만 표기 |
 | 4 | 이름 영문 표기 | 사용자는 명함 표기 Ko Yujun. 팀원은 답이 올 때까지 영어 페이지에도 한글 이름(예: "이유진 (development)") |
 | 5 | 미공개 게임 타일을 넣을지 | 넣지 않는다. 배포되는 HTML에 주석도 남기지 않는다 |
 | 6 | FeelSoGut! 출시 일정을 표기할지 | 표기하지 않는다 |
 | 7 | 미래 게임잼 최우수상의 영문 공식 명칭 | "Top Excellence Award (최우수상), 2026 Future Game Jam" |
-| 8 | 삼유스튜디오 영문 표기 | 3U Studio (빌드의 회사명 표기) |
+| 8 | 팀 이름 표기 | **해결됨 (2026-10-27).** 사이트에 팀 이름을 쓰지 않는다 |
 | 9 | "KO"라는 이름의 뜻을 소개에 넣을지 | **해결됨 (2026-10-27).** 넣는다 (5.3) |
 
 ## 12. 결정 기록
@@ -460,7 +462,8 @@ DNS 값과 화면 단계는 공식 문서(docs.github.com, support.squarespace.c
 | 시네마틱 다크 + 타이틀 화면 연출 혼합 | 사용자가 영화 같은 느낌을 원하고, 게임 회사로 보이는 신호도 필요 |
 | 스플래시를 three.js로 포팅 (영상 대신) | 선명하고 가볍고, 마지막 로고가 타이틀 화면으로 그대로 이어짐 |
 | 한국어 기본 + 영어 별도 페이지 | 국내외 방문자 모두, 검색·링크 미리보기에 유리 |
-| 게임에 "삼유스튜디오 작품" 표기를 보이게 둠 | 두 게임은 3인 팀의 작품이고 KO Studio와의 관계는 정하는 중. 크레딧과 저작권을 분명히 하고, 정해지면 문구만 바꿈 |
+| 팀 이름은 빼고 게임별 팀원 크레딧은 보이게 둠 | 사용자가 팀 이름은 넣지 않기로 함. 두 게임은 세 사람이 함께 만들고 있으므로 크레딧과 저작권 표기로 공정하게 밝힘 |
+| 한국어 문구는 합쇼체 | 사용자 결정 |
 | 외부 IP 관련 작업 제외 | 공개 범위 확인 전에는 올리지 않음 |
 | 영상 없이 이미지로만 | 영상 파일이 없고, 사용자가 영상 없이 진행하기로 함 |
 | 글꼴·라이브러리 직접 제공 | 외부 서버 장애에 영향받지 않고, 방문자 정보가 제3자에게 가지 않음 |
