@@ -167,6 +167,12 @@ html:lang(en) .studio-text { max-width: 36em; }
 .site-footer a:hover { color: var(--text); }
 html.no-replay .replay-intro { display: none; }
 
+/* 404 */
+.not-found { min-height: 100svh; display: grid; place-content: center; justify-items: center; gap: 18px; padding: 24px; text-align: center; }
+.not-found h1 { margin: 24px 0 0; font: 500 22px/1.4 var(--serif); }
+.not-found p { color: var(--muted); }
+.not-found-links { font: 500 13px/1 var(--sans); letter-spacing: .14em; }
+
 /* Lightbox */
 #lightbox { padding: 0; border: 0; background: transparent; max-width: min(94vw, 1600px); max-height: 94vh; overflow: visible; }
 #lightbox::backdrop { background: rgba(0, 0, 0, .88); }
