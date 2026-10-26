@@ -2,6 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>
+(function(){var d=document.documentElement,q=location.search,ss=null,seen=false,gl=false;
+try{ss=window.sessionStorage;seen=!!ss.getItem('ko:intro')}catch(e){}
+var rm=/[?&]reducemotion\b/.test(q)||matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!/[?&]nowebgl\b/.test(q)){try{var c=document.createElement('canvas');gl=!!(c.getContext('webgl2')||c.getContext('webgl'))}catch(e){}}
+if(rm||!gl)d.classList.add('no-replay');
+var play=!/[?&]nointro\b/.test(q)&&!rm&&gl&&!location.hash&&(/[?&]intro\b/.test(q)||!seen);
+window.__koIntro={play:play,rm:rm,gl:gl};
+if(play){d.classList.add('intro');try{ss.setItem('ko:intro','1')}catch(e){}
+window.__koIntroFailsafe=setTimeout(function(){d.classList.remove('intro')},4000)}})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KO Studio</title>
 <meta name="description" content="KO Studio is the game studio of designer and sound designer Ko Yujun, now making FeelSoGut! and OFF THE RECORD.">
@@ -21,9 +32,9 @@
 <script type="module" src="/assets/js/main.js"></script>
 </head>
 <body>
-<div id="intro" aria-hidden="true">
-  <div class="intro-stage"></div>
-  <div class="vignette"></div>
+<div id="intro">
+  <div class="intro-stage" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
   <button type="button" class="intro-btn" data-skip>Skip</button>
   <button type="button" class="intro-btn" data-sound aria-pressed="false">Sound on</button>
 </div>

@@ -15,9 +15,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / ".cache" / "results"
 BROWSERS = [
+    Path("C:/Program Files/Google/Chrome/Application/chrome.exe"),
     Path("C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"),
     Path("C:/Program Files/Microsoft/Edge/Application/msedge.exe"),
-    Path("C:/Program Files/Google/Chrome/Application/chrome.exe"),
 ]
 
 
@@ -29,6 +29,9 @@ def run_suite(browser, suite, port, timeout):
         str(browser), "--headless=new", f"--user-data-dir={profile}", "--no-first-run",
         "--no-default-browser-check", "--window-size=1280,900", "--enable-unsafe-swiftshader",
         "--autoplay-policy=user-gesture-required",
+        # Keep the page "visible" even when the desktop is locked or covered (remote sessions).
+        "--disable-features=CalculateNativeWinOcclusion", "--disable-backgrounding-occluded-windows",
+        "--disable-renderer-backgrounding", "--disable-background-timer-throttling",
         f"http://127.0.0.1:{port}/__tests__/{suite}.html?report",
     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
@@ -36,8 +39,14 @@ def run_suite(browser, suite, port, timeout):
         while time.time() < end and not out.exists():
             time.sleep(0.5)
     finally:
-        proc.kill()
+        # Kill the whole tree: renderer and GPU children otherwise outlive the browser and keep running.
+        subprocess.run(["taskkill", "/T", "/F", "/PID", str(proc.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         proc.wait()
+        # Some helpers (crashpad, utility) are not in the tree; find them by this run's unique profile path.
+        ps = ("Get-CimInstance Win32_Process -Filter \"Name='msedge.exe' or Name='chrome.exe'\" | "
+              f"Where-Object {{ $_.CommandLine -like '*{profile.name}*' }} | "
+              "ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }")
+        subprocess.run(["powershell", "-NoProfile", "-Command", ps], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(1)
         shutil.rmtree(profile, ignore_errors=True)
     if not out.exists():

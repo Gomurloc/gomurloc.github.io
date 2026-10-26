@@ -952,9 +952,13 @@ export function playIntro({ mount, signal } = {}) {
       ro.observe(mount);
       document.addEventListener('visibilitychange', onVisibility);
       isReady = true;
-      clock = { audio: false, t0: 0, c0: performance.now() / 1000 };
-      if (soundOn) setClock(0);
-      raf = requestAnimationFrame(frame);
+      if (document.hidden) {
+        pausedAt = 0; // opened in a background tab: start from the top once the tab is shown
+      } else {
+        clock = { audio: false, t0: 0, c0: performance.now() / 1000 };
+        if (soundOn) setClock(0);
+        raf = requestAnimationFrame(frame);
+      }
       resolveReady();
     } catch (err) {
       destroy();
@@ -984,7 +988,7 @@ export function playIntro({ mount, signal } = {}) {
       if (isReady && !finished && pausedAt === null) setClock(clockT());
     },
     destroy,
-    getTime: () => (finished ? current : isReady ? clockT() : 0),
+    getTime: () => (finished ? current : !isReady ? 0 : pausedAt ?? clockT()),
   };
 }
 

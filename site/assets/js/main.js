@@ -1,8 +1,11 @@
 import { initMenu } from './menu.js';
 import { initStickyHeader } from './header.js';
 import { initLightbox } from './lightbox.js';
+import { runIntro } from './intro-run.js';
 
 const doc = document;
+
+runIntro(doc);
 
 initMenu(doc.querySelector('.title-menu'));
 initStickyHeader(doc.querySelector('[data-header]'), doc.getElementById('top'));
