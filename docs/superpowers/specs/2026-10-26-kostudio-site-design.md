@@ -261,12 +261,12 @@
 ### 5.3 스튜디오 소개 (초안)
 
 - KO:
-  > KO Studio는 고유준의 게임 스튜디오예요. 기획과 사운드를 맡아, 소리와 연출로 마음을 움직이는 게임을 만들고 싶어요.
+  > KO Studio는 게임 기획자이자 사운드 디자이너 고유준의 스튜디오예요. 이름도 고유준에서 왔어요. 성 '고(Ko)', 그리고 인트로의 종이 인형은 '유준'의 초성 ㅇ·ㅈ이에요. 이 인형이 한 방에 쓰러지면 K·O가 되죠. 그렇게 예상을 한 번에 뒤집는 게임을 만들고 싶어요.
   > 지금은 순천향대학교 메타버스&게임학과 동기들과 꾸린 팀 삼유스튜디오에서 두 게임을 함께 만들고 있어요.
 - EN:
-  > KO Studio is the game studio of designer and sound designer Ko Yujun, making games that move people through sound and presentation.
+  > KO Studio is the game studio of designer and sound designer Ko Yujun, and the name is Ko Yujun's own. Ko is the family name, and the paper figure in the intro is ㅇ and ㅈ, the Korean initials of Yujun. Knock it down and it becomes K·O. That's the kind of game KO Studio wants to make: one that flips your expectations in a single blow.
   > Right now, Ko Yujun is building two games with 3U Studio, a team of classmates from the Metaverse & Game program at Soonchunhyang University.
-- "KO"라는 이름의 뜻은 사용자에게 확인한 뒤에만 넣는다 (11장 9번).
+- 이름 풀이(성 Ko + 초성 ㅇ·ㅈ + K.O.)는 사용자가 확인한 내용이다 (2026-10-27). 스플래시 코드 주석에도 인형을 "훈민정음 해례본풍 ㅇ·ㅈ"로 만들었다고 적혀 있다.
 
 ## 6. 기술 구조
 
@@ -380,7 +380,7 @@ gomurloc.github.io/            ← 이 폴더 (kostudio.org)
 
 DNS 값과 화면 단계는 공식 문서(docs.github.com, support.squarespace.com)에서 확인한 것이다. 다만 4번(DNS)을 5번(사용자 지정 도메인)보다 먼저 하는 순서는 GitHub 문서의 권장 순서(도메인 추가 → DNS)와 일부러 다르다. 이유는 5번에 적었다. `gomurloc.github.io/...`가 `kostudio.org/...`로 301 리디렉트되는 동작은 문서에 적혀 있지 않고 다른 사이트들에서 관찰된 것이며, 8번에서 확인한다.
 
-**메일 레코드(MX, SPF, DKIM)는 처음부터 끝까지 건드리지 않는다.** 3번에서 처음 배포하는 순간 사이트가 `gomurloc.github.io`로 공개되므로, 이 장 전체는 11장 2번(팀원 동의)이 해결된 뒤에 진행한다. DNS와 Pages 설정은 사용자가 직접 하거나, 사용자가 화면을 보며 승인할 때만 한다.
+**메일 레코드(MX, SPF, DKIM)는 처음부터 끝까지 건드리지 않는다.** 3번에서 처음 배포하는 순간 사이트가 `gomurloc.github.io`로 공개된다. 팀원 동의(11장 2번)는 해결됐다. DNS와 Pages 설정은 사용자가 직접 하거나, 사용자가 화면을 보며 승인할 때만 한다.
 
 1. **준비.** 지금 DNS 상태를 기록한다 (A, AAAA, HTTPS, www, MX, TXT, DKIM). 네임서버, DNSSEC, Google Workspace 프리셋은 건드리지 않는다.
 2. **도메인 검증 (GitHub 계정 단위).**
@@ -440,14 +440,14 @@ DNS 값과 화면 단계는 공식 문서(docs.github.com, support.squarespace.c
 | # | 질문 | 기본값 |
 |---|---|---|
 | 1 | 두 게임의 플레이 영상 | 없이 진행 (사용자 결정). 생기면 13장 |
-| 2 | 이유진 님, 권유담 님께 동의를 받았나요? 범위: 두 게임의 제목·그림·스크린샷과 이름을 KO Studio 사이트에 싣는 것, 팀의 비공개 저장소 그림을 쓰는 것, 각자 원하는 영문 이름 표기 | **동의 전에는 공개 배포하지 않는다** (로컬에서만 확인) |
+| 2 | 이유진 님, 권유담 님의 게재 동의 | **해결됨 (2026-10-27).** 사용자가 동의를 확인함. 영문 이름 표기는 4번에 남음 |
 | 3 | FeelSoGut!의 팀원별 역할 표기 | "삼유스튜디오 작품"만 표기 |
 | 4 | 이름 영문 표기 | 사용자는 명함 표기 Ko Yujun. 팀원은 답이 올 때까지 영어 페이지에도 한글 이름(예: "이유진 (development)") |
 | 5 | 미공개 게임 타일을 넣을지 | 넣지 않는다. 배포되는 HTML에 주석도 남기지 않는다 |
 | 6 | FeelSoGut! 출시 일정을 표기할지 | 표기하지 않는다 |
 | 7 | 미래 게임잼 최우수상의 영문 공식 명칭 | "Top Excellence Award (최우수상), 2026 Future Game Jam" |
 | 8 | 삼유스튜디오 영문 표기 | 3U Studio (빌드의 회사명 표기) |
-| 9 | "KO"라는 이름의 뜻을 소개에 넣을지 | 넣지 않는다 |
+| 9 | "KO"라는 이름의 뜻을 소개에 넣을지 | **해결됨 (2026-10-27).** 넣는다 (5.3) |
 
 ## 12. 결정 기록
 
