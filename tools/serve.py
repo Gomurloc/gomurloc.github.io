@@ -4,6 +4,7 @@
 /__tests__/    -> tests/browser/
 /__tools__/    -> tools/
 POST /__save__/<name>.png -> .cache/render/<name>.png
+POST /__results__/<suite> -> .cache/results/<suite>.txt (browser test results)
 """
 import argparse
 import re
@@ -16,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MOUNTS = [("/__tests__/", ROOT / "tests" / "browser"), ("/__tools__/", ROOT / "tools")]
 SITE = ROOT / "site"
 RENDER = ROOT / ".cache" / "render"
+RESULTS = ROOT / ".cache" / "results"
 SAVE_NAME = re.compile(r"^[a-z0-9-]+\.png$")
 
 
@@ -63,6 +65,17 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         path = unquote(urlsplit(self.path).path)
+        if path.startswith("/__results__/"):
+            name = path[len("/__results__/"):]
+            if not re.match(r"^[a-z0-9-]+$", name):
+                self.send_error(400)
+                return
+            length = int(self.headers.get("Content-Length", "0"))
+            RESULTS.mkdir(parents=True, exist_ok=True)
+            (RESULTS / f"{name}.txt").write_bytes(self.rfile.read(length))
+            self.send_response(204)
+            self.end_headers()
+            return
         if not path.startswith("/__save__/"):
             self.send_error(405)
             return

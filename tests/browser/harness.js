@@ -71,11 +71,19 @@ export async function run() {
     } finally {
       clearTimeout(timer);
       document.querySelectorAll('#frames iframe').forEach((f) => f.remove());
+      await report('-partial', out.textContent);
     }
   }
   const ok = passed === tests.length;
   out.textContent += `RESULT: ${ok ? 'PASS' : 'FAIL'} ${ok ? passed : tests.length - passed}/${tests.length}\n`;
   document.title = ok ? 'PASS' : 'FAIL';
+  await report('', out.textContent);
+}
+
+async function report(suffix, text) {
+  if (!new URLSearchParams(location.search).has('report')) return;
+  const suite = location.pathname.split('/').pop().replace(/\.html$/, '');
+  await fetch(`/__results__/${suite}${suffix}`, { method: 'POST', body: text });
 }
 
 function fmt(v) {
