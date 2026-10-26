@@ -80,6 +80,41 @@ test('failsafe frees page when main.js never runs', async () => {
   await waitFor(() => !intro(doc), 5000);
 }, { timeout: 7000 });
 
+const noModules = async () => (await (await fetch('/')).text()).replace(/<script type="module"[^>]*><\/script>/, '');
+
+test('budget exceeded falls back right away', async () => {
+  fresh();
+  const { doc } = await openHtml(await noModules());
+  assert(intro(doc), 'intro class not set');
+  const { runIntro } = await import('/assets/js/intro-run.js');
+  const t0 = performance.now();
+  const result = await runIntro(doc, { budgetMs: doc.defaultView.performance.now() + 300, load: () => new Promise(() => {}) });
+  assertEq(result, 'fallback');
+  assert(!intro(doc), 'still in intro');
+  assert(performance.now() - t0 < 1000, `fallback took ${Math.round(performance.now() - t0)}ms`);
+}, { timeout: 3000 });
+
+test('import is skipped once the budget has passed', async () => {
+  fresh();
+  const { doc } = await openHtml(await noModules());
+  const { runIntro } = await import('/assets/js/intro-run.js');
+  let loaded = false;
+  const result = await runIntro(doc, { budgetMs: 0, load: () => { loaded = true; return new Promise(() => {}); } });
+  assertEq(result, 'fallback');
+  assert(!loaded, 'intro module was still requested');
+}, { timeout: 3000 });
+
+test('title width does not change at handoff', async () => {
+  fresh();
+  const { doc } = await openPage('/', { width: 1280, height: 720 });
+  await readyToSkip(doc);
+  const stage = doc.querySelector('.intro-stage').getBoundingClientRect().width;
+  doc.querySelector('[data-skip]').click();
+  await waitFor(() => !intro(doc), 2000);
+  const title = doc.querySelector('.title').getBoundingClientRect().width;
+  assertEq(Math.round(title), Math.round(stage), 'title vs intro stage width');
+}, { timeout: 10000 });
+
 test('bfcache restore mid-intro shows hero', async () => {
   fresh();
   const { doc, win } = await openPage('/');

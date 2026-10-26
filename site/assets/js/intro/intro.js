@@ -879,6 +879,12 @@ export function playIntro({ mount, signal } = {}) {
   function frame() {
     raf = 0;
     if (finished || destroyed) return;
+    if (clock.audio && actx.state !== 'running') {
+      // Audio was interrupted (e.g. a call on iOS) and its clock stopped: carry on silently on the wall clock.
+      const t0 = clockT();
+      stopAudio();
+      clock = { audio: false, t0, c0: performance.now() / 1000 };
+    }
     let t = clockT();
     if (t >= T_LOGO) t = T_LOGO;
     current = t;

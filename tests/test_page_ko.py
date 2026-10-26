@@ -72,6 +72,25 @@ class PageKo(unittest.TestCase):
             for img in self.p.by_id(sec).select("img"):
                 self.assertEqual(img.attrs.get("loading"), "lazy", img.attrs["src"])
 
+    def test_otr_title_reads_as_words(self):
+        title = self.p.select("h3", class_="otr-title")[0].text
+        self.assertEqual(" ".join(title.split()), "OFF THE RECORD")
+
+    def test_svh_has_vh_fallback(self):
+        css = (SITE / "assets/css/site.css").read_text(encoding="utf-8")
+        for selector, body in re.findall(r"([^{}]+)\{([^}]*)\}", css):
+            if "100svh" in body:
+                self.assertIn("100vh", body, selector.strip())
+
+    def test_menu_cursor_follows_any_focus(self):
+        # Focus moved by script after a tap/click skip is not :focus-visible; the cursor must still show.
+        css = (SITE / "assets/css/site.css").read_text(encoding="utf-8")
+        self.assertIn("a[data-menu]:focus::before", css)
+
+    def test_focus_outline_never_removed(self):
+        css = (SITE / "assets/css/site.css").read_text(encoding="utf-8")
+        self.assertNotRegex(css, r"outline:\s*(none|0)")
+
     def test_css_rules(self):
         css = (SITE / "assets/css/site.css").read_text(encoding="utf-8")
         for token in ["--bg: #0b0b0c", "--text: #e9e4da", "--red: #c41e2a", "--red-line: #8f1220"]:

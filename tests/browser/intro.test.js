@@ -54,6 +54,36 @@ test('resize mid-intro updates buffer', async () => {
   c.destroy();
 }, { timeout: 15000 });
 
+test('audio interruption does not freeze the intro', async () => {
+  const Real = window.AudioContext;
+  let state = 'running', freeze = false, frozen = null;
+  // A real context that we can "interrupt": its state flips and its clock stops, as on iOS during a call.
+  window.AudioContext = class extends Real {
+    get state() { return state; }
+    get currentTime() {
+      if (!freeze) return super.currentTime;
+      frozen ??= super.currentTime;
+      return frozen;
+    }
+    resume() { return Promise.resolve(); }
+  };
+  try {
+    const c = playIntro({ mount });
+    await c.ready;
+    await c.setSound(true);
+    await wait(300);
+    freeze = true;
+    state = 'interrupted';
+    await wait(200);
+    const t1 = c.getTime();
+    await wait(1000);
+    assert(c.getTime() - t1 > 0.5, `clock stuck at ${t1}`);
+    c.destroy();
+  } finally {
+    window.AudioContext = Real;
+  }
+}, { timeout: 15000 });
+
 test('renderFrame draws the logo', async () => {
   const cv = await renderFrame({ width: 640, height: 360 });
   const c2 = Object.assign(document.createElement('canvas'), { width: 640, height: 360 });

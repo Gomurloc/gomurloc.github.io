@@ -48,7 +48,9 @@ test('Korean names never split across lines (EN page, phone widths)', async () =
   for (const p of doc.querySelectorAll('.credit, .game-kr')) {
     assertEq(win.getComputedStyle(p).wordBreak, 'keep-all', `${w}px .${p.className} word-break`);
     for (const name of ['고유준', '이유진', '권유담', '필소굿', '오프 더 레코드']) {
-      const node = [...p.childNodes].find((n) => n.nodeType === 3 && n.data.includes(name));
+      const walker = doc.createTreeWalker(p, NodeFilter.SHOW_TEXT);
+      let node = null;
+      while (walker.nextNode()) if (walker.currentNode.data.includes(name)) { node = walker.currentNode; break; }
       if (!node) continue;
       const range = doc.createRange();
       const i = node.data.indexOf(name);
@@ -61,6 +63,14 @@ test('Korean names never split across lines (EN page, phone widths)', async () =
   close();
   }
 }, { timeout: 15000 });
+
+test('Korean page keeps words whole everywhere', async () => {
+  const { win, doc, close } = await openPage('/?nointro', { width: 360, height: 780 });
+  for (const sel of ['.site-footer span', '.tile-stage', '.desc', '.studio-text p', '.contact-note']) {
+    assertEq(win.getComputedStyle(doc.querySelector(sel)).wordBreak, 'keep-all', sel);
+  }
+  close();
+});
 
 test('JavaScript off: all content visible, no intro layer', async () => {
   for (const page of ['/', '/en/']) {

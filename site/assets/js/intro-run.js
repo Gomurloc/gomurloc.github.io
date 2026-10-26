@@ -3,7 +3,7 @@ const MODIFIERS = new Set(['Tab', 'Shift', 'Control', 'Alt', 'Meta']);
 const HANDOFF_MS = 400;
 const BUDGET_MS = 3000; // from navigation start until the intro is ready
 
-export function runIntro(doc) {
+export function runIntro(doc, { budgetMs = BUDGET_MS, load = () => import('./intro/intro.js') } = {}) {
   const html = doc.documentElement, win = doc.defaultView;
   if (!html.classList.contains('intro')) return Promise.resolve('none');
 
@@ -34,7 +34,7 @@ export function runIntro(doc) {
   skipBtn.addEventListener('click', skip);
   soundBtn.addEventListener('click', onSound);
   win.addEventListener('pageshow', onPageShow);
-  const budget = win.setTimeout(() => ac.abort(), Math.max(0, BUDGET_MS - win.performance.now()));
+  const budget = win.setTimeout(() => { if (!ready) fallback(); }, Math.max(0, budgetMs - win.performance.now()));
 
   function cleanup() {
     types.forEach((t) => win.removeEventListener(t, onInput));
@@ -73,8 +73,10 @@ export function runIntro(doc) {
   }
 
   (async () => {
+    // Too late already (slow page load): don't download three.js for an intro that won't play.
+    if (win.performance.now() >= budgetMs) return fallback();
     try {
-      const { playIntro } = await import('./intro/intro.js');
+      const { playIntro } = await load();
       if (settled || ac.signal.aborted) return fallback();
       controller = playIntro({ mount, signal: ac.signal });
       await controller.ready;

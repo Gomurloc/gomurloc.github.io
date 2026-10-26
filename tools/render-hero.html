@@ -13,7 +13,7 @@ try {
   for (const [w, h] of [[1920, 1080], [2880, 1620]]) {
     const canvas = await renderFrame({ width: w, height: h });
     const blob = await new Promise((r) => canvas.toBlob(r, 'image/png'));
-    const res = await fetch(`/__save__/hero-${w}.png`, { method: 'POST', body: blob });
+    const res = await fetch(`/__save__/hero-${w}.png`, { method: 'POST', body: blob, headers: { 'X-KO-Dev': '1' } });
     if (!res.ok) throw new Error(`save hero-${w}.png: ${res.status}`);
     out.textContent += `PASS hero-${w}.png\n`;
   }
@@ -24,6 +24,6 @@ try {
   document.title = 'FAIL';
 }
 if (new URLSearchParams(location.search).has('report')) {
-  await fetch('/__results__/render-hero', { method: 'POST', body: out.textContent });
+  await fetch('/__results__/render-hero', { method: 'POST', body: out.textContent, headers: { 'X-KO-Dev': '1' } });
 }
 </script>

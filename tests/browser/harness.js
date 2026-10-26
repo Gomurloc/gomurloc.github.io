@@ -83,7 +83,7 @@ export async function run() {
 async function report(suffix, text) {
   if (!new URLSearchParams(location.search).has('report')) return;
   const suite = location.pathname.split('/').pop().replace(/\.html$/, '');
-  await fetch(`/__results__/${suite}${suffix}`, { method: 'POST', body: text });
+  await fetch(`/__results__/${suite}${suffix}`, { method: 'POST', body: text, headers: { 'X-KO-Dev': '1' } });
 }
 
 function fmt(v) {

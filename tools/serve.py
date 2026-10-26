@@ -63,7 +63,28 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store")
         super().end_headers()
 
+    def _bad_path(self):
+        # Backslashes and drive colons would let Windows path joins escape the served folders (or reach UNC shares).
+        path = unquote(urlsplit(self.path).path)
+        if "\\" in path or ":" in path:
+            self.send_error(400)
+            return True
+        return False
+
+    def do_GET(self):
+        if not self._bad_path():
+            super().do_GET()
+
+    def do_HEAD(self):
+        if not self._bad_path():
+            super().do_HEAD()
+
     def do_POST(self):
+        # A custom header can't be sent cross-site without a CORS preflight, which this server never grants,
+        # so other web pages open in the same browser can't write into .cache/.
+        if self.headers.get("X-KO-Dev") != "1":
+            self.send_error(403)
+            return
         path = unquote(urlsplit(self.path).path)
         if path.startswith("/__results__/"):
             name = path[len("/__results__/"):]

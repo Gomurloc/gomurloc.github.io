@@ -14,6 +14,24 @@ test('menu arrows move focus and wrap', async () => {
   assertEq(doc.activeElement, links[2]);
 });
 
+test('hidden header shows when a link in it gets focus', async () => {
+  const { doc } = await openPage('/?nointro', { height: 700 });
+  await waitFor(() => doc.documentElement.dataset.ready === '1', 3000);
+  doc.querySelector('.site-header a').focus();
+  await wait(400);
+  const top = doc.querySelector('.site-header').getBoundingClientRect().top;
+  assert(top >= -0.5, `header still off-screen (top ${top})`);
+});
+
+test('menu cursor stays visible after programmatic focus', async () => {
+  const { win, doc } = await openPage('/?nointro');
+  await waitFor(() => doc.documentElement.dataset.ready === '1', 3000);
+  const games = doc.querySelector('a[data-menu]');
+  games.focus();
+  await wait(300);
+  assertEq(win.getComputedStyle(games, '::before').opacity, '1');
+});
+
 test('header appears after leaving title', async () => {
   const { win, doc } = await openPage('/?nointro', { height: 700 });
   await waitFor(() => doc.documentElement.dataset.ready === '1', 3000);
