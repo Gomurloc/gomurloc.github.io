@@ -1,6 +1,6 @@
 """Build site images from game art and brand files.
 
-python tools/build_images.py [--only fsg|otr|brand|hero]
+python tools/build_images.py [--only fsg|otr|brand|hero|stage]
 
 FeelSoGut! art is read (never written) from the local rhythm-prototype checkout.
 Layer layouts below are copied from its Unity scenes (UI Image RectTransforms
@@ -24,6 +24,9 @@ FSG = Path(os.environ.get("FSG_ROOT", "C:/Users/user/Documents/GitHub/rhythm-pro
 OTR_RAW = "https://raw.githubusercontent.com/Gomurloc/off-the-record/main/"
 OTR_DIR = "이미지/웹/"
 FRAME = (1920, 1080)
+# The pop-out sprite's box in the 1920x1080 1-5 scene (left, top, right, bottom). site.css
+# (.plate-pop img) and the img width/height in both pages derive from it; tests check both.
+POP_BOX = (291, 102, 1662, 700)
 
 # (file, anchorMin, anchorMax, anchoredPosition, sizeDelta, pivot, scale, preserveAspect)
 FULL = ((0, 0), (1, 1), (0, 0), (0, 0), (0.5, 0.5), (1, 1), False)
@@ -130,6 +133,109 @@ def build_fsg():
         save_webp(framed.resize((w, round(framed.height * w / framed.width)), Image.LANCZOS), f"fsg-logo-{w}.webp")
 
 
+def sprite(layer, alpha=16):
+    """Crop a full-frame layer to its visible pixels (faint edge pixels ignored)."""
+    box = layer.getchannel("A").point(lambda v: 255 if v > alpha else 0).getbbox()
+    return layer.crop(box), box
+
+
+def fsg_poster(W=900, H=1200, win_x=868, clown=(1112, 845, 0.76), jack=(1552, 689, 0.86)):
+    """3:4 poster re-staged from the 1-5 layers: background and sea keep the scene's
+    geometry (cropped at win_x), the clown and Jackdoo are moved in closer.
+    (x, y, s) = sprite bottom-centre in scene px and scale."""
+    k = H / 1080
+    layer = lambda f: Image.open(FSG / "1-5" / f).convert("RGBA")
+    c = Image.new("RGBA", (W, H), (0, 0, 0, 255))
+
+    def full(im):
+        im = im.resize((round(1920 * k), H), Image.LANCZOS)
+        c.alpha_composite(im.crop((round(win_x * k), 0, round(win_x * k) + W, H)))
+
+    def place(im, x, y, s):
+        sp, _ = sprite(im)
+        sp = sp.resize((round(sp.width * k * s), round(sp.height * k * s)), Image.LANCZOS)
+        tmp = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        tmp.paste(sp, (round((x - win_x) * k - sp.width / 2), round(y * k - sp.height)), sp)
+        c.alpha_composite(tmp)
+
+    full(layer("리믹스1 배경.png"))
+    place(layer("리믹스1잭두.png"), *jack)
+    place(layer("리믹스1 광대.png"), *clown)
+    full(layer("리믹스1 바다.png"))
+    return c.convert("RGB")
+
+
+def fsg_pop():
+    """The clown and Jackdoo above the waterline, for the plate's pop-out layer: whatever
+    rises above the plate's top edge steps out of the frame. Cropped to POP_BOX; stops if the
+    art's own box has moved, since site.css and the pages place the sprite by that box."""
+    layers = [Image.open(FSG / "1-5" / f).convert("RGBA") for f in ("리믹스1잭두.png", "리믹스1 광대.png")]
+    boxes = [sprite(im)[1] for im in layers]
+    box = (min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes), 700)  # the sea covers the basin below y=700
+    scene = Image.new("RGBA", (1920, 1080), (0, 0, 0, 0))
+    for im in layers:
+        scene.alpha_composite(im)
+    if box != POP_BOX:
+        raise SystemExit(f"fsg-pop box is now {box}; update POP_BOX, .plate-pop img in site.css and the img width/height")
+    pop = scene.crop(POP_BOX)
+    # Feather the bottom 60px so the cut line melts into the (vignetted) plate below it.
+    a = pop.getchannel("A")
+    fade = Image.linear_gradient("L").resize((pop.width, 60)).transpose(Image.FLIP_TOP_BOTTOM)
+    mask = Image.new("L", pop.size, 255)
+    mask.paste(fade, (0, pop.height - 60))
+    pop.putalpha(Image.composite(a, Image.new("L", pop.size, 0), mask))
+    return pop
+
+
+def hanji_grain(size=384, seed=7):
+    """Tileable hanji fibre texture on transparency, after paperCanvas() in intro.js:
+    fibres only (light ones in hanji white, dark ones in ink), no mottling, since any
+    large soft blob shows up as a repeating grid when the tile is laid edge to edge.
+    Drawn at 2x, then downsampled."""
+    import math
+    import random
+    from PIL import ImageDraw
+
+    rnd = random.Random(seed).random
+    S = size * 2
+    im = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    light, dark = (233, 228, 218), (0, 0, 0)
+
+    def wrapped(x, y, r):
+        for ox in (-S, 0, S):
+            for oy in (-S, 0, S):
+                if -r < x + ox < S + r and -r < y + oy < S + r:
+                    yield x + ox, y + oy
+
+    draw = ImageDraw.Draw(im, "RGBA")
+    for _ in range(1100):  # fibres: long, faint, bent strokes
+        x, y = rnd() * S, rnd() * S
+        ln, a, bend = S * (0.02 + rnd() * 0.07), rnd() * math.tau, (rnd() - 0.5) * S * 0.04
+        col = light if rnd() < 0.6 else dark
+        al, lw = 0.025 + rnd() * 0.06, max(1, round((0.4 + rnd() * 0.7) * 2))
+        cx = math.cos(a) * ln / 2 - math.sin(a) * bend
+        cy = math.sin(a) * ln / 2 + math.cos(a) * bend
+        for X, Y in wrapped(x, y, ln):
+            pts = []
+            for i in range(9):
+                u = i / 8
+                px = 2 * (1 - u) * u * cx + u * u * math.cos(a) * ln
+                py = 2 * (1 - u) * u * cy + u * u * math.sin(a) * ln
+                pts.append((X + px, Y + py))
+            draw.line(pts, fill=col + (int(255 * al),), width=lw)
+    return im.resize((size, size), Image.LANCZOS)
+
+
+def build_stage():
+    """Images for the redesign: posters, the plate pop-out and the hanji grain."""
+    poster = fsg_poster()
+    widths(poster, "fsg-poster", [900, 600])  # the art is 1080px tall; anything larger is an upscale
+    otr_title = otr("타이틀_글자없음.jpg")
+    widths(otr_title.crop((115, 0, 925, 1080)).resize((900, 1200), Image.LANCZOS), "otr-poster", [900, 600])
+    save_webp(fsg_pop(), "fsg-pop.webp")  # native scene size
+    save_webp(hanji_grain(), "hanji-grain.webp", q=60)
+
+
 def otr(name):
     dst = CACHE / "otr" / name
     if not dst.exists():
@@ -187,8 +293,8 @@ def build_hero():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--only", choices=["fsg", "otr", "brand", "hero"])
+    parser.add_argument("--only", choices=["fsg", "otr", "brand", "hero", "stage"])
     only = parser.parse_args().only
-    for key, fn in [("fsg", build_fsg), ("otr", build_otr), ("brand", build_brand), ("hero", build_hero)]:
+    for key, fn in [("fsg", build_fsg), ("otr", build_otr), ("brand", build_brand), ("hero", build_hero), ("stage", build_stage)]:
         if only in (None, key):
             fn()
