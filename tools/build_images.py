@@ -121,7 +121,6 @@ def widths(im, slug, ws, cap=450_000):
 def build_fsg():
     hero = compose("1-5")
     widths(hero, "fsg-hero", [1920, 1280, 960])
-    widths(hero, "fsg-tile", [960, 640])
     for i, scene in enumerate(["1-2", "1-4", "start"], 1):
         widths(compose(scene), f"fsg-shot-{i}", [1920, 960])
     title = Image.open(FSG / "시작/시작_타이틀.png").convert("RGBA")
@@ -251,7 +250,6 @@ def build_otr():
     widths(otr("플레이_오프닝.jpg"), "otr-shot-2", [800])
     widths(otr("인트로2.jpg"), "otr-shot-3", [1600, 960])
     widths(otr("인트로3.jpg"), "otr-shot-4", [1600, 960])
-    widths(cover(otr("인트로4.jpg"), (1600, 900)), "otr-tile", [960, 640])
 
 
 KO_MARK = """<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="382 155 176 70" role="img" aria-label="KO Studio">

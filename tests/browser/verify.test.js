@@ -2,6 +2,7 @@ import { test, assert, assertEq, openPage, openHtml, wait, waitFor } from './har
 
 const SIZES = [[360, 780], [390, 844], [768, 1024], [844, 390], [1280, 800], [1366, 657], [1536, 730], [1920, 969], [1920, 1080], [2560, 1080]];
 const kb = (n) => Math.round(n / 1024);
+const ROOM = { feelsogut: 'rgb(13, 14, 56)', otr: 'rgb(11, 16, 25)' };
 
 test('no horizontal overflow at any size', async () => {
   for (const page of ['/?nointro', '/en/?nointro']) {
@@ -82,6 +83,13 @@ test('JavaScript off: all content visible, no intro layer', async () => {
       const el = doc.getElementById(id);
       assert(el && win.getComputedStyle(el).visibility === 'visible' && el.getBoundingClientRect().height > 0, `${page}: #${id} hidden`);
     }
+    const rooms = doc.querySelectorAll('.game');
+    assertEq(rooms.length, 2, `${page}: rooms`);
+    for (const room of rooms) assertEq(win.getComputedStyle(room).backgroundColor, ROOM[room.dataset.game], `${page}: #${room.id} lit without JS`);
+    const lines = doc.querySelectorAll('.title-card > *');
+    assertEq(lines.length, 9, `${page}: title card lines`);
+    for (const el of lines) assertEq(win.getComputedStyle(el).opacity, '1', `${page}: title card line hidden`);
+    assertEq(win.getComputedStyle(doc.querySelector('.title-menu'), '::after').opacity, '0', `${page}: band shown without JS`);
     assert(doc.querySelector('#contact a[href="mailto:ko@kostudio.org"]'), `${page}: mail link missing`);
     close();
   }

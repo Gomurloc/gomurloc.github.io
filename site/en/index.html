@@ -67,82 +67,98 @@ window.__koIntroFailsafe=setTimeout(function(){d.classList.remove('intro')},4000
     <div class="wrap">
       <div class="section-head"><h2 class="label">SELECT A GAME</h2></div>
       <div class="tiles">
-        <a class="tile" href="#game-feelsogut">
-          <img src="/assets/img/fsg-tile-640.webp" srcset="/assets/img/fsg-tile-640.webp 640w, /assets/img/fsg-tile-960.webp 960w" sizes="(min-width: 760px) 50vw, 100vw" alt="" loading="lazy" width="640" height="360">
-          <span class="tile-body"><span class="tile-name">FeelSoGut!</span><span class="tile-stage">Alpha</span></span>
+        <a class="tile" href="#game-feelsogut" data-game="feelsogut">
+          <img class="tile-art" src="/assets/img/fsg-poster-600.webp" srcset="/assets/img/fsg-poster-600.webp 600w, /assets/img/fsg-poster-900.webp 900w" sizes="(min-width: 980px) 443px, (min-width: 641px) calc(50vw - 41px), min(100vw - 48px, 400px)" alt="" loading="lazy" width="600" height="800">
+          <span class="tile-body"><img class="tile-logo" src="/assets/img/fsg-logo-340.webp" srcset="/assets/img/fsg-logo-340.webp 340w, /assets/img/fsg-logo-680.webp 680w" sizes="(min-width: 980px) 284px, (min-width: 641px) 30vw, 256px" alt="FeelSoGut!" loading="lazy" width="340" height="256"><span class="tile-stage">Alpha</span></span>
         </a>
-        <a class="tile" href="#game-otr">
-          <img src="/assets/img/otr-tile-640.webp" srcset="/assets/img/otr-tile-640.webp 640w, /assets/img/otr-tile-960.webp 960w" sizes="(min-width: 760px) 50vw, 100vw" alt="" loading="lazy" width="640" height="360">
-          <span class="tile-body"><span class="tile-name">OFF THE RECORD</span><span class="tile-stage">In development</span></span>
+        <a class="tile" href="#game-otr" data-game="otr">
+          <img class="tile-art" src="/assets/img/otr-poster-600.webp" srcset="/assets/img/otr-poster-600.webp 600w, /assets/img/otr-poster-900.webp 900w" sizes="(min-width: 980px) 443px, (min-width: 641px) calc(50vw - 41px), min(100vw - 48px, 400px)" alt="" loading="lazy" width="600" height="800">
+          <span class="tile-body"><span class="stencil"><span>OFF THE</span> <span>RECORD</span></span><span class="tile-stage">In development</span></span>
         </a>
       </div>
     </div>
   </section>
 
   <section id="game-feelsogut" class="section game" data-game="feelsogut">
+    <div class="stage-light" aria-hidden="true"></div>
     <div class="wrap">
-      <div class="game-grid">
-        <div class="game-media">
-          <img src="/assets/img/fsg-hero-960.webp" srcset="/assets/img/fsg-hero-960.webp 960w, /assets/img/fsg-hero-1280.webp 1280w, /assets/img/fsg-hero-1920.webp 1920w" sizes="(min-width: 900px) 620px, 100vw" alt="Stage 1-5 intro: the clown water ghost stepping into a basin while Jackdoo waves from a cliff" loading="lazy" width="960" height="540">
-        </div>
-        <div class="game-info">
-          <h3 class="game-title"><img src="/assets/img/fsg-logo-340.webp" srcset="/assets/img/fsg-logo-340.webp 340w, /assets/img/fsg-logo-680.webp 680w" sizes="340px" alt="FeelSoGut!" loading="lazy" width="340" height="256"></h3>
-          <span class="game-kr" lang="ko">필소굿</span>
-          <p class="credit">Ko Yujun · <span lang="ko">이유진</span> · <span lang="ko">권유담</span></p>
-          <p class="tagline">A one-button cyber-shaman rhythm game.</p>
-          <ul class="tags"><li>Rhythm</li><li>One-button</li><li>Narrative</li><li>PC</li><li class="stage">Alpha · In development</li></ul>
-          <p class="desc">Jackdoo, a cyborg shaman about to be repossessed for a missed installment, borrows your beat — you're the offscreen spirit — to throw a ritual party for a clown-faced water ghost who drowned holding a crashed stock, and send him on his way. Characters play a rhythm; you answer with a single button across a run of minigames. Neon cyber-city meets Korean shamanism and stock-forum slang in a black comedy.</p>
-        </div>
+    <header class="title-card">
+      <p class="presents" lang="en">A <span aria-hidden="true">K<span class="presents-dot"></span>O STUDIO</span><span class="visually-hidden">KO Studio</span> GAME</p>
+      <h3 class="game-title"><img src="/assets/img/fsg-logo-340.webp" srcset="/assets/img/fsg-logo-340.webp 340w, /assets/img/fsg-logo-680.webp 680w" sizes="(min-width: 1267px) 380px, max(220px, 30vw)" alt="FeelSoGut!" loading="lazy" width="340" height="256"></h3>
+      <p class="game-kr" lang="ko">필소굿</p>
+      <p class="logline">Spirit, lend me your beat.</p>
+    </header>
+    <figure class="plate" data-drift>
+      <div class="plate-frame"><img class="plate-img" src="/assets/img/fsg-hero-960.webp" srcset="/assets/img/fsg-hero-960.webp 960w, /assets/img/fsg-hero-1280.webp 1280w, /assets/img/fsg-hero-1920.webp 1920w" sizes="(min-width: 1168px) 1120px, calc(100vw - 48px)" alt="Stage 1-5 intro: the clown water ghost stepping into a basin while Jackdoo waves from a cliff" loading="lazy" width="1920" height="1080"></div>
+      <div class="plate-pop" aria-hidden="true"><img src="/assets/img/fsg-pop.webp" alt="" loading="lazy" width="1371" height="598"></div>
+    </figure>
+    <div class="game-body">
+      <div class="game-about">
+        <p class="tagline">A one-button cyber-shaman rhythm game.</p>
+        <p class="desc">Jackdoo, a cyborg shaman about to be repossessed for a missed installment, borrows your beat — you’re the offscreen spirit — to throw a ritual party for a clown-faced water ghost who drowned holding a crashed stock, and send him on his way. Characters play a rhythm; you answer with a single button across a run of minigames. Neon cyber-city meets Korean shamanism and stock-forum slang in a black comedy.</p>
       </div>
+      <div class="game-meta">
+        <p class="credit">Ko Yujun · <span lang="ko">이유진</span> · <span lang="ko">권유담</span></p>
+        <ul class="tags"><li>Rhythm</li><li>One-button</li><li>Narrative</li><li>PC</li><li class="stage">Alpha · In development</li></ul>
+      </div>
+    </div>
       <ul class="shots">
         <li><button type="button" data-lightbox data-full="/assets/img/fsg-shot-1-1920.webp" data-alt="Stage 1-2 intro, “Pass It On”"><img src="/assets/img/fsg-shot-1-960.webp" alt="Stage 1-2 intro, “Pass It On”" loading="lazy" width="960" height="540"></button></li>
         <li><button type="button" data-lightbox data-full="/assets/img/fsg-shot-2-1920.webp" data-alt="Stage 1-4 intro, “Averaging Down”"><img src="/assets/img/fsg-shot-2-960.webp" alt="Stage 1-4 intro, “Averaging Down”" loading="lazy" width="960" height="540"></button></li>
         <li><button type="button" data-lightbox data-full="/assets/img/fsg-shot-3-1920.webp" data-alt="FeelSoGut! title screen"><img src="/assets/img/fsg-shot-3-960.webp" alt="FeelSoGut! title screen" loading="lazy" width="960" height="540"></button></li>
         <li><button type="button" data-lightbox data-full="/assets/img/fsg-hero-1920.webp" data-alt="Stage 1-5 intro"><img src="/assets/img/fsg-hero-960.webp" alt="Stage 1-5 intro" loading="lazy" width="960" height="540"></button></li>
       </ul>
+    <a class="next" href="#game-otr"><span class="next-label">Up next</span><span class="next-title stencil">OFF THE RECORD</span></a>
     </div>
   </section>
 
   <section id="game-otr" class="section game" data-game="otr">
+    <div class="stage-light" aria-hidden="true"></div>
     <div class="wrap">
-      <div class="game-grid">
-        <div class="game-media">
-          <img src="/assets/img/otr-hero-960.webp" srcset="/assets/img/otr-hero-960.webp 960w, /assets/img/otr-hero-1280.webp 1280w, /assets/img/otr-hero-1920.webp 1920w" sizes="(min-width: 900px) 620px, 100vw" alt="A salvager holding an unconscious man on a rock ledge under the dead Earth" loading="lazy" width="960" height="540">
-        </div>
-        <div class="game-info">
-          <h3 class="otr-title"><span>OFF THE</span> <span>RECORD</span></h3>
-          <span class="game-kr" lang="ko">오프 더 레코드</span>
-          <p class="credit">Ko Yujun (design, sound) · <span lang="ko">이유진</span> (development) · <span lang="ko">권유담</span> (art)</p>
-          <p class="tagline">Salvage it out there. Sell it back home.</p>
-          <ul class="tags"><li>Extraction adventure</li><li>Top-down</li><li>Single-player</li><li>PC</li><li class="stage">In development · 15-minute demo in progress</li></ul>
-          <p class="desc">A century after the sky died, people live on orbital stations, and the wrecks circling Earth are currency. As an indebted salvager, latch onto wrecks, crack open cargo bays, then fly home to sell your haul and upgrade your ship for higher orbits. But every bay you open makes noise — and the Sweepers hunt noise.</p>
-          <p class="award">Top Excellence Award (<span lang="ko">최우수상</span>), 2026 Future Game Jam</p>
-          <a class="external" href="/off-the-record/">Team page →</a>
-        </div>
+    <header class="title-card">
+      <p class="presents" lang="en">A <span aria-hidden="true">K<span class="presents-dot"></span>O STUDIO</span><span class="visually-hidden">KO Studio</span> GAME</p>
+      <h3 class="otr-title stencil"><span>OFF THE</span> <span>RECORD</span></h3>
+      <p class="game-kr" lang="ko">오프 더 레코드</p>
+      <p class="logline">Salvage it out there. Sell it back home.</p>
+      <p class="award"><svg class="laurel" viewBox="-1 0 16 28" aria-hidden="true"><path d="M10.5 27.5C4 23 1.8 14 6 1.5" fill="none" stroke="currentColor" stroke-width=".8"/><ellipse cx="6.9" cy="25.6" rx="1.25" ry="2.7" transform="rotate(-62 6.9 25.6)"/><ellipse cx="3.7" cy="20.7" rx="1.25" ry="2.7" transform="rotate(-42 3.7 20.7)"/><ellipse cx="2.0" cy="15.0" rx="1.25" ry="2.7" transform="rotate(-18 2.0 15.0)"/><ellipse cx="1.8" cy="9.3" rx="1.25" ry="2.7" transform="rotate(8 1.8 9.3)"/><ellipse cx="3.1" cy="4.1" rx="1.25" ry="2.7" transform="rotate(30 3.1 4.1)"/><ellipse cx="11.6" cy="22.0" rx="1.25" ry="2.7" transform="rotate(38 11.6 22.0)"/><ellipse cx="8.7" cy="17.2" rx="1.25" ry="2.7" transform="rotate(24 8.7 17.2)"/><ellipse cx="7.1" cy="11.8" rx="1.25" ry="2.7" transform="rotate(14 7.1 11.8)"/><ellipse cx="7.3" cy="6.4" rx="1.25" ry="2.7" transform="rotate(34 7.3 6.4)"/></svg><span class="award-text"><span>Top Excellence Award (<span lang="ko">최우수상</span>),</span> <span>2026 Future Game Jam</span></span><svg class="laurel" viewBox="-1 0 16 28" aria-hidden="true"><path d="M10.5 27.5C4 23 1.8 14 6 1.5" fill="none" stroke="currentColor" stroke-width=".8"/><ellipse cx="6.9" cy="25.6" rx="1.25" ry="2.7" transform="rotate(-62 6.9 25.6)"/><ellipse cx="3.7" cy="20.7" rx="1.25" ry="2.7" transform="rotate(-42 3.7 20.7)"/><ellipse cx="2.0" cy="15.0" rx="1.25" ry="2.7" transform="rotate(-18 2.0 15.0)"/><ellipse cx="1.8" cy="9.3" rx="1.25" ry="2.7" transform="rotate(8 1.8 9.3)"/><ellipse cx="3.1" cy="4.1" rx="1.25" ry="2.7" transform="rotate(30 3.1 4.1)"/><ellipse cx="11.6" cy="22.0" rx="1.25" ry="2.7" transform="rotate(38 11.6 22.0)"/><ellipse cx="8.7" cy="17.2" rx="1.25" ry="2.7" transform="rotate(24 8.7 17.2)"/><ellipse cx="7.1" cy="11.8" rx="1.25" ry="2.7" transform="rotate(14 7.1 11.8)"/><ellipse cx="7.3" cy="6.4" rx="1.25" ry="2.7" transform="rotate(34 7.3 6.4)"/></svg></p>
+    </header>
+    <figure class="plate" data-drift>
+      <div class="plate-frame"><img class="plate-img" src="/assets/img/otr-hero-960.webp" srcset="/assets/img/otr-hero-960.webp 960w, /assets/img/otr-hero-1280.webp 1280w, /assets/img/otr-hero-1920.webp 1920w" sizes="(min-width: 1168px) 1120px, calc(100vw - 48px)" alt="A salvager holding an unconscious man on a rock ledge under the dead Earth" loading="lazy" width="1920" height="1080"></div>
+    </figure>
+    <div class="game-body">
+      <div class="game-about">
+        <p class="desc">A century after the sky died, people live on orbital stations, and the wrecks circling Earth are currency. As an indebted salvager, latch onto wrecks, crack open cargo bays, then fly home to sell your haul and upgrade your ship for higher orbits. But every bay you open makes noise — and the Sweepers hunt noise.</p>
       </div>
+      <div class="game-meta">
+        <p class="credit">Ko Yujun (design, sound) · <span lang="ko">이유진</span> (development) · <span lang="ko">권유담</span> (art)</p>
+        <ul class="tags"><li>Extraction adventure</li><li>Top-down</li><li>Single-player</li><li>PC</li><li class="stage">In development · 15-minute demo in progress</li></ul>
+        <a class="external draw" href="/off-the-record/">Team page →</a>
+      </div>
+    </div>
       <ul class="shots">
         <li><button type="button" data-lightbox data-full="/assets/img/otr-shot-1-800.webp" data-alt="Gameplay: the station and mission list"><img src="/assets/img/otr-shot-1-800.webp" alt="Gameplay: the station and mission list" loading="lazy" width="800" height="448"></button></li>
         <li><button type="button" data-lightbox data-full="/assets/img/otr-shot-2-800.webp" data-alt="Gameplay: the opening radio call"><img src="/assets/img/otr-shot-2-800.webp" alt="Gameplay: the opening radio call" loading="lazy" width="800" height="447"></button></li>
         <li><button type="button" data-lightbox data-full="/assets/img/otr-shot-3-1600.webp" data-alt="A spacesuit glove holding the glowing golden record"><img src="/assets/img/otr-shot-3-960.webp" alt="A spacesuit glove holding the glowing golden record" loading="lazy" width="960" height="540"></button></li>
         <li><button type="button" data-lightbox data-full="/assets/img/otr-shot-4-1600.webp" data-alt="A salvage ship facing red-eyed Sweepers"><img src="/assets/img/otr-shot-4-960.webp" alt="A salvage ship facing red-eyed Sweepers" loading="lazy" width="960" height="540"></button></li>
       </ul>
+    <a class="next" href="#studio"><span class="next-label">End credits</span><span class="next-title">KO Studio</span></a>
     </div>
   </section>
 
   <section id="studio" class="section spot">
     <div class="wrap">
       <div class="section-head"><h2 class="label">STUDIO</h2></div>
-      <div class="studio-text">
-        <p>KO Studio is the game studio of designer and sound designer Ko Yujun, and the name is Ko Yujun's own. Ko is the family name, and the paper figure in the intro is <span class="nobr"><span lang="ko">ㅇ</span> and <span lang="ko">ㅈ</span></span>, the Korean initials of Yujun. Knock it down and it becomes <span class="nobr">K·O</span>. That's the kind of game KO Studio makes: one that flips your expectations in a single blow.</p>
-        <p>Right now, Ko Yujun is building two games together with a fellow developer and an artist.</p>
-      </div>
+      <div class="studio-text"><p>KO Studio is the game studio of designer and sound designer Ko Yujun, and the name is Ko Yujun’s own. Ko is the family name, and the paper figure in the intro is <span class="nobr"><span lang="ko">ㅇ</span> and <span lang="ko">ㅈ</span></span>, the Korean initials of Yujun. Knock it down and it becomes <span class="nobr">K·O</span>.</p></div>
+      <p class="statement">That’s the kind of game KO Studio makes: one that flips your expectations in a single blow.</p>
+      <div class="studio-text"><p>Right now, Ko Yujun is building two games together with a fellow developer and an artist.</p></div>
+      <div class="seal" aria-hidden="true"><img src="/assets/img/ko-mark.svg" alt="" width="45" height="18"></div>
     </div>
   </section>
 
   <section id="contact" class="section spot contact">
     <div class="wrap">
       <div class="section-head"><h2 class="label">CONTACT</h2></div>
-      <a class="mail-link" href="mailto:ko@kostudio.org">ko<span class="at">@</span>kostudio.org</a>
+      <a class="mail-link draw" href="mailto:ko@kostudio.org">ko<span class="at">@</span>kostudio.org</a>
       <p class="contact-note">For publishing, collaboration, or job and contract offers, email us.</p>
     </div>
   </section>
@@ -151,7 +167,7 @@ window.__koIntroFailsafe=setTimeout(function(){d.classList.remove('intro')},4000
 <footer class="site-footer">
   <div class="wrap">
     <span>© 2026 KO Studio · Game titles and art © their respective creators</span>
-    <span><a class="replay-intro" href="?intro">Replay intro</a></span>
+    <span><a class="replay-intro draw" href="?intro">Replay intro</a></span>
     <span class="lang"><a href="/" data-lang="ko" hreflang="ko">KO</a><a href="/en/" data-lang="en" hreflang="en" aria-current="page">EN</a></span>
   </div>
 </footer>

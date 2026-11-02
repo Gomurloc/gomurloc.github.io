@@ -11,7 +11,6 @@ import build_images  # noqa: E402
 IMG = SITE / "assets/img"
 EXPECTED = {  # name: (width, height or None to keep ratio)
     "fsg-hero-1920.webp": (1920, 1080), "otr-hero-1920.webp": (1920, 1080),
-    "fsg-tile-640.webp": (640, 360), "otr-tile-640.webp": (640, 360),
     "otr-shot-1-800.webp": (800, None), "og.jpg": (1200, 630),
     "favicon-32.png": (32, 32), "apple-touch-icon.png": (180, 180), "icon-512.png": (512, 512),
     "hero-1920.webp": (1920, 1080),
@@ -51,6 +50,10 @@ class Images(unittest.TestCase):
                 self.assertEqual(im.mode, "RGBA", name)
         with Image.open(IMG / "fsg-pop.webp") as im:
             self.assertEqual(im.size, (right - left, bottom - top))
+
+    def test_tiles_removed(self):
+        for name in ["fsg-tile-640.webp", "fsg-tile-960.webp", "otr-tile-640.webp", "otr-tile-960.webp"]:
+            self.assertFalse((IMG / name).exists(), name)
 
     def test_logo_has_alpha(self):
         with Image.open(IMG / "fsg-logo-680.webp") as im:
