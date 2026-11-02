@@ -12,7 +12,9 @@ export function initMenu(nav) {
     links[(i + step + links.length) % links.length].focus();
   });
 
+  let current;  // the link the band is on
   const place = (a) => {
+    current = a;
     nav.style.setProperty('--band-x', `${a.offsetLeft}px`);
     nav.style.setProperty('--band-w', `${a.offsetWidth}px`);
   };
@@ -24,7 +26,7 @@ export function initMenu(nav) {
   nav.addEventListener('pointerleave', rest);
   nav.addEventListener('focusin', (e) => { if (links.includes(e.target)) place(e.target); });
   nav.addEventListener('focusout', () => requestAnimationFrame(rest));
-  new ResizeObserver(rest).observe(nav);  // web fonts change the link widths
+  new ResizeObserver(() => place(current)).observe(nav);  // web fonts change the link widths
   rest();
   nav.classList.add('has-band');
 }

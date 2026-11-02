@@ -21,6 +21,9 @@ function contrast(a, b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
+const bandOf = (nav) => `${nav.style.getPropertyValue('--band-x')} ${nav.style.getPropertyValue('--band-w')}`;
+const boxOf = (a) => `${a.offsetLeft}px ${a.offsetWidth}px`;
+
 test('figures step out of the plate in register, clear of the logline', async () => {
   for (const page of ['/?nointro&reducemotion', '/en/?nointro&reducemotion']) {
     for (const [w, h] of SIZES) {
@@ -123,6 +126,18 @@ test('a jump past the title card lights the room, wherever near its edge it star
   }
 }, { timeout: 30000 });
 
+test('reloading inside a room lights it again', async () => {
+  const { frame, win, doc, close } = await openPage('/?nointro', { width: 1280, height: 800 });
+  doc.querySelector('#game-otr .game-body').scrollIntoView({ block: 'start', behavior: 'instant' });
+  await wait(300);
+  const reloaded = new Promise((r) => { frame.addEventListener('load', r, { once: true }); });
+  win.location.reload();
+  await reloaded;
+  await waitFor(() => frame.contentWindow.scrollY > 0, 2000).catch(() => assert(false, 'scroll position not restored'));
+  await waitFor(() => frame.contentDocument.getElementById('game-otr').classList.contains('is-lit'), 2000).catch(() => assert(false, 'room dark after a reload'));
+  close();
+}, { timeout: 8000 });
+
 test('reduced motion, or no IntersectionObserver: every room and plate lit at load', async () => {
   const a = await openPage('/?nointro&reducemotion', { width: 1280, height: 800 });
   for (const el of a.doc.querySelectorAll('.game, [data-drift]')) assert(el.classList.contains('is-lit'), `reducemotion: ${el.id || el.className}`);
@@ -166,8 +181,8 @@ test('selection band rests on GAMES, follows focus, pointer and width changes, a
   win.focus();
   const nav = doc.querySelector('.title-menu');
   const [games, studio, contact] = nav.querySelectorAll('a[data-menu]');
-  const band = () => `${nav.style.getPropertyValue('--band-x')} ${nav.style.getPropertyValue('--band-w')}`;
-  const on = (a) => `${a.offsetLeft}px ${a.offsetWidth}px`;
+  const band = () => bandOf(nav);
+  const on = boxOf;
   assert(nav.classList.contains('has-band'), 'band not switched on');
   await waitFor(() => win.getComputedStyle(nav, '::after').opacity === '1', 1000);
   await waitFor(() => band() === on(games), 500);
@@ -185,5 +200,24 @@ test('selection band rests on GAMES, follows focus, pointer and width changes, a
   assertEq(band(), on(contact), 'pointer');
   nav.dispatchEvent(new win.PointerEvent('pointerleave'));
   assertEq(band(), on(games), 'pointer left');
+  close();
+});
+
+test('selection band stays on the hovered link when the links change width', async () => {
+  const { win, doc, close } = await openPage('/?nointro', { width: 1280, height: 800 });
+  await doc.fonts.ready;
+  const nav = doc.querySelector('.title-menu');
+  const [games, , contact] = nav.querySelectorAll('a[data-menu]');
+  contact.dispatchEvent(new win.PointerEvent('pointerover', { bubbles: true }));
+  games.style.letterSpacing = '.5em';  // stands in for a web font arriving during the first hover
+  await wait(200);
+  assertEq(bandOf(nav), boxOf(contact), 'band left the hovered link');
+  close();
+});
+
+test('the menu fades in after the intro at its old speed', async () => {
+  const { win, doc, close } = await openPage('/?nointro', { width: 1280, height: 800 });
+  const cs = win.getComputedStyle(doc.querySelector('.title-menu'));
+  assertEq(`${cs.transitionProperty} ${cs.transitionDuration} ${cs.transitionTimingFunction}`, 'opacity 0.4s ease');
   close();
 });

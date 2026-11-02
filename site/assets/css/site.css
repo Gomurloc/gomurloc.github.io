@@ -113,7 +113,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + var(--s3)); }
   top: calc(50% + 0.17 * max(100vh, 56.25vw));
   top: calc(50% + 0.17 * max(100svh, 56.25vw));
   display: flex; gap: var(--s5); white-space: nowrap;
-  transition: opacity var(--d3) var(--ease-out);
+  transition: opacity var(--d2);  /* in step with the .4s hand-off from the intro */
 }
 @media (max-width: 480px) { .title-menu { gap: var(--s4); } }
 .title-menu a { position: relative; padding: var(--s1) 2px; text-decoration: none; transition: color var(--d1); }
