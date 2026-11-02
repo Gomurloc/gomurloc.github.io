@@ -109,6 +109,20 @@ test('landing inside a room below its title card lights it', async () => {
   close();
 }, { timeout: 6000 });
 
+test('a jump past the title card lights the room, wherever near its edge it starts', async () => {
+  // Steps smaller than the room's top padding: one of them starts with the room's edge in view
+  // and its card still below the fold, wherever the fold falls in this test frame.
+  for (const y of [100, 200, 300, 400, 500, 600, 700]) {
+    const { win, doc, close } = await openPage('/?nointro', { width: 1280, height: 800 });
+    const fsg = doc.getElementById('game-feelsogut');
+    win.scrollTo({ top: fsg.offsetTop - y, behavior: 'instant' });
+    await wait(200);
+    fsg.querySelector('.game-body').scrollIntoView({ block: 'start', behavior: 'instant' });
+    await waitFor(() => fsg.classList.contains('is-lit'), 1500).catch(() => assert(false, `room dark after a jump from y=${y}`));
+    close();
+  }
+}, { timeout: 30000 });
+
 test('reduced motion, or no IntersectionObserver: every room and plate lit at load', async () => {
   const a = await openPage('/?nointro&reducemotion', { width: 1280, height: 800 });
   for (const el of a.doc.querySelectorAll('.game, [data-drift]')) assert(el.classList.contains('is-lit'), `reducemotion: ${el.id || el.className}`);
