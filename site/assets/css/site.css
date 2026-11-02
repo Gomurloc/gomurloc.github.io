@@ -206,21 +206,20 @@ section[id] { scroll-margin-top: calc(var(--header-h) + var(--s3)); }
 
 /* ───────── Game sections: the room lights up in the game's colour ───────── */
 /* Each room starts as dark as the stage and fills with its colour when the lights come on.
-   Its top and bottom fade back to ink, so between two games the house goes dark. */
+   Its top and bottom fade back to ink, so between two games the house goes dark.
+   Transitions sit on the lit state only: the page is first styled without .js (lit), and
+   main.js adding .js must switch it to dark at once, not fade the lights out. */
 .game {
   background:
     linear-gradient(var(--bg), transparent var(--s7), transparent calc(100% - var(--s7)), var(--bg)),
     var(--grain) 0 0 / 384px;
   background-color: var(--g-room);
-  transition: background-color var(--d4) var(--ease-out);
   overflow-x: hidden; overflow-x: clip;
 }
 .game::before { content: none; }
 .js .game:not(.is-lit) { background-color: var(--bg); }
-.stage-light {
-  position: absolute; inset: 0; pointer-events: none;
-  transition: opacity var(--d4) var(--ease-out);
-}
+.js .game.is-lit { transition: background-color var(--d4) var(--ease-out); }
+.stage-light { position: absolute; inset: 0; pointer-events: none; }
 [data-game="feelsogut"] .stage-light {
   background:
     radial-gradient(ellipse 46% 34% at 50% 0%, color-mix(in srgb, var(--g-accent) 26%, transparent), transparent 72%),
@@ -233,6 +232,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + var(--s3)); }
     radial-gradient(ellipse 44% 60% at 100% 45%, color-mix(in srgb, var(--g-accent-2) 12%, transparent), transparent 70%);
 }
 .js .game:not(.is-lit) .stage-light { opacity: 0; }
+.js .game.is-lit .stage-light { transition: opacity var(--d4) var(--ease-out); }
 .game .wrap { position: relative; }
 .game :focus-visible { outline-color: var(--g-accent); }
 
@@ -263,8 +263,8 @@ html:lang(en) .logline { font-family: var(--sans); }
 .award .laurel:last-child { transform: scaleX(-1); }
 
 /* The orchestrated moment: when the lights come on, the card arrives line by line. */
-.js .game .title-card > * { opacity: 0; transform: translateY(13px); transition: opacity var(--d3) var(--ease-out), transform var(--d3) var(--ease-out); }
-.js .game.is-lit .title-card > * { opacity: 1; transform: none; }
+.js .game .title-card > * { opacity: 0; transform: translateY(13px); }
+.js .game.is-lit .title-card > * { opacity: 1; transform: none; transition: opacity var(--d3) var(--ease-out), transform var(--d3) var(--ease-out); }
 .js .game.is-lit .title-card > :nth-child(2) { transition-delay: var(--stagger); }
 .js .game.is-lit .title-card > :nth-child(3) { transition-delay: calc(2 * var(--stagger)); }
 .js .game.is-lit .title-card > :nth-child(4) { transition-delay: calc(3 * var(--stagger)); }
@@ -287,8 +287,8 @@ html:lang(en) .logline { font-family: var(--sans); }
    tests/test_redesign.py keeps them in sync. */
 .plate-pop { position: absolute; left: 0; right: 0; bottom: 0; aspect-ratio: 16 / 9; pointer-events: none; transform-origin: 50% 100%; }
 .plate-pop img { position: absolute; left: 15.1562%; top: 9.4444%; width: 71.4062%; }
-.js .plate .plate-img, .js .plate .plate-pop { transform: scale(1.045); transition: transform var(--d4) var(--ease-out); }
-.js .plate.is-lit .plate-img, .js .plate.is-lit .plate-pop { transform: none; }
+.js .plate .plate-img, .js .plate .plate-pop { transform: scale(1.045); }
+.js .plate.is-lit .plate-img, .js .plate.is-lit .plate-pop { transform: none; transition: transform var(--d4) var(--ease-out); }
 
 .game-body { display: grid; gap: var(--s4) var(--s6); }
 @media (min-width: 900px) { .game-body { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }

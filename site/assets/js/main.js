@@ -1,9 +1,17 @@
 import { initMenu } from './menu.js';
 import { initStickyHeader } from './header.js';
 import { initLightbox } from './lightbox.js';
+import { initStage } from './stage.js';
 import { runIntro } from './intro-run.js';
 
 const doc = document;
+
+// Styles that hide things until a script reveals them key off .js, so they only apply
+// once this module (the thing that reveals them) is actually running. The stage starts
+// right after, before anything that could throw (header.js needs IntersectionObserver),
+// so a failing module can never leave a room dark.
+doc.documentElement.classList.add('js');
+initStage(doc);
 
 runIntro(doc);
 

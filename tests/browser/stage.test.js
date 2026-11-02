@@ -72,3 +72,104 @@ test('status tags read at 4.5:1 or better in the lit rooms', async () => {
   }
   close();
 }, { timeout: 8000 });
+
+test('loading the page starts no lighting transitions', async () => {
+  const { doc, close } = await openPage('/?nointro', { width: 1280, height: 800 });
+  const running = doc.getAnimations().filter((a) => a.effect?.target?.closest?.('.game'));
+  assertEq(running.length, 0, 'room transitions running at load');
+  close();
+});
+
+test('a room lights when its title card arrives, only that room, and stays lit', async () => {
+  const { win, doc, close } = await openPage('/?nointro', { width: 1280, height: 800 });
+  const fsg = doc.getElementById('game-feelsogut');
+  const otr = doc.getElementById('game-otr');
+  for (const room of [fsg, otr]) {
+    assert(!room.classList.contains('is-lit'), `#${room.id} lit before arriving`);
+    assertEq(win.getComputedStyle(room).backgroundColor, 'rgb(11, 11, 12)', `#${room.id} starts dark`);
+  }
+  // The room's top edge is in view but its card is still below the fold: not yet.
+  win.scrollTo({ top: fsg.offsetTop - win.innerHeight * 0.88 + 60, behavior: 'instant' });
+  await wait(300);
+  assert(!fsg.classList.contains('is-lit'), 'lit before the card arrived');
+  fsg.querySelector('.title-card').scrollIntoView({ block: 'center', behavior: 'instant' });
+  await waitFor(() => fsg.classList.contains('is-lit'), 2000);
+  assert(!otr.classList.contains('is-lit'), 'the next room lit early');
+  await waitFor(() => win.getComputedStyle(fsg).backgroundColor === ROOM.feelsogut, 3500);
+  win.scrollTo({ top: 0, behavior: 'instant' });
+  await wait(300);
+  assert(fsg.classList.contains('is-lit'), 'the room went dark again');
+  close();
+}, { timeout: 10000 });
+
+test('landing inside a room below its title card lights it', async () => {
+  const { doc, close } = await openPage('/?nointro', { width: 1280, height: 800 });
+  doc.querySelector('#game-otr .next').scrollIntoView({ block: 'center', behavior: 'instant' });
+  await waitFor(() => doc.getElementById('game-otr').classList.contains('is-lit'), 2000);
+  close();
+}, { timeout: 6000 });
+
+test('reduced motion, or no IntersectionObserver: every room and plate lit at load', async () => {
+  const a = await openPage('/?nointro&reducemotion', { width: 1280, height: 800 });
+  for (const el of a.doc.querySelectorAll('.game, [data-drift]')) assert(el.classList.contains('is-lit'), `reducemotion: ${el.id || el.className}`);
+  a.close();
+  // header.js throws without IntersectionObserver, so main.js stops there; the rooms must be lit anyway.
+  const html = (await (await fetch('/')).text())
+    .replace('<head>', "<head><script>sessionStorage.setItem('ko:intro','1');delete window.IntersectionObserver;</script>");
+  const b = await openHtml(html, { width: 1280, height: 800 });
+  assert(b.doc.documentElement.classList.contains('js'), 'main.js did not run');
+  for (const el of b.doc.querySelectorAll('.game, [data-drift]')) assert(el.classList.contains('is-lit'), `no IO: ${el.id || el.className}`);
+  b.close();
+}, { timeout: 8000 });
+
+test('title card lines arrive one after another', async () => {
+  const { win, doc, close } = await openPage('/?nointro&reducemotion', { width: 1280, height: 800 });
+  const delays = (id) => JSON.stringify([...doc.querySelectorAll(`#${id} .title-card > *`)].map((el) => parseFloat(win.getComputedStyle(el).transitionDelay)));
+  assertEq(delays('game-feelsogut'), '[0,0.12,0.24,0.36]');
+  assertEq(delays('game-otr'), '[0,0.12,0.24,0.36,0.48]');
+  close();
+});
+
+test('a deep link lights the room it lands in', async () => {
+  const { doc, close } = await openPage('/#game-otr', { width: 1280, height: 800 });
+  await waitFor(() => doc.getElementById('game-otr').classList.contains('is-lit'), 3000);
+  close();
+}, { timeout: 6000 });
+
+test('plates sit pushed in until they arrive', async () => {
+  const { win, doc, close } = await openPage('/?nointro', { width: 1280, height: 800 });
+  const plate = doc.querySelector('#game-otr .plate');
+  assert(!plate.classList.contains('is-lit'), 'plate lit early');
+  assertEq(win.getComputedStyle(plate.querySelector('.plate-img')).transform, 'matrix(1.045, 0, 0, 1.045, 0, 0)', 'plate not pushed in');
+  plate.scrollIntoView({ block: 'center', behavior: 'instant' });
+  await waitFor(() => plate.classList.contains('is-lit'), 2000);
+  close();
+}, { timeout: 6000 });
+
+test('selection band rests on GAMES, follows focus, pointer and width changes, and comes back', async () => {
+  const { win, doc, close } = await openPage('/?nointro', { width: 1280, height: 800 });
+  await doc.fonts.ready;
+  win.focus();
+  const nav = doc.querySelector('.title-menu');
+  const [games, studio, contact] = nav.querySelectorAll('a[data-menu]');
+  const band = () => `${nav.style.getPropertyValue('--band-x')} ${nav.style.getPropertyValue('--band-w')}`;
+  const on = (a) => `${a.offsetLeft}px ${a.offsetWidth}px`;
+  assert(nav.classList.contains('has-band'), 'band not switched on');
+  await waitFor(() => win.getComputedStyle(nav, '::after').opacity === '1', 1000);
+  await waitFor(() => band() === on(games), 500);
+  const before = on(games);
+  games.style.letterSpacing = '.5em';  // stands in for a web font arriving late
+  assert(on(games) !== before, 'link width did not change');
+  await waitFor(() => band() === on(games), 500);
+  games.style.letterSpacing = '';
+  await waitFor(() => band() === on(games), 500);
+  studio.focus();
+  assertEq(band(), on(studio), 'focus');
+  studio.blur();
+  await waitFor(() => band() === on(games), 500);
+  contact.dispatchEvent(new win.PointerEvent('pointerover', { bubbles: true }));
+  assertEq(band(), on(contact), 'pointer');
+  nav.dispatchEvent(new win.PointerEvent('pointerleave'));
+  assertEq(band(), on(games), 'pointer left');
+  close();
+});
